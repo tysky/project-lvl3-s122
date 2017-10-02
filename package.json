@@ -1,0 +1,45 @@
+{
+  "name": "web-page-loader",
+  "version": "0.0.1",
+  "description": "Utility for downloading web pages",
+  "main": "index.js",
+  "bin": {
+    "page-loader": "dist/bin/page-loader.js"
+  },
+  "scripts": {
+    "test": "jest",
+    "babel-node": "babel-node",
+    "build": "NODE_ENV=production babel src --out-dir dist --source-maps inline",
+    "prepublish": "npm run build",
+    "eslint": "eslint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tysky/project-lvl3-s122.git"
+  },
+  "author": "Dmitry Tysky",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tysky/project-lvl3-s122/issues"
+  },
+  "homepage": "https://github.com/tysky/project-lvl3-s122#readme",
+  "devDependencies": {
+    "babel-cli": "*",
+    "babel-core": "*",
+    "babel-eslint": "*",
+    "babel-preset-env": "*",
+    "babel-preset-stage-0": "*",
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb-base": "*",
+    "eslint-plugin-import": "*",
+    "eslint-plugin-jest": "*",
+    "jest": "^20"
+  },
+  "dependencies": {
+    "axios": "^0.16.2",
+    "commander": "^2.11.0",
+    "listr": "^0.12.0",
+    "mz": "^2.7.0",
+    "nock": "^9.0.22",
+  }
+}
