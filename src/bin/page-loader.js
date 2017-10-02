@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 import program from 'commander';
 import config from '../../package.json';
-// import loader from '..';
+import pageLoader from '..';
 
 program
   .version(config.version)
   .description(config.description)
   .arguments('<url>')
-  .option('-o, --output <outputDir>', 'Output format')
+  .option('-o, --output [outputDir]', 'Output format')
   .action((url) => {
-    console.log('@@@@@@@@@@@@@@@@@@@@', url);
+    pageLoader(url);
   });
 program.parse(process.argv);
