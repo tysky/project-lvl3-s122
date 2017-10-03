@@ -6,9 +6,9 @@ import pageLoader from '..';
 program
   .version(config.version)
   .description(config.description)
+  .option('-o, --output [outputDir]', 'Path to downloading page')
   .arguments('<url>')
-  .option('-o, --output [outputDir]', 'Output format')
   .action((url) => {
-    pageLoader(url);
-  });
-program.parse(process.argv);
+    pageLoader(url, program.output);
+  })
+  .parse(process.argv);
