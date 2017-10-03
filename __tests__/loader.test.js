@@ -40,17 +40,3 @@ test('test downloading page', () => {
     .then(() => fs.readFile(path.join(tempDirPath, 'example-com.html')))
     .then(fileData => expect(fileData.toString()).toBe(body));
 });
-// test('test downloading page', () => {
-//   expect.assertions(1);
-//   return fs.mkdtemp(`${os.tmpdir()}${path.sep}`)
-//     .then((tempDirPath) => {
-//       pageLoader(host, tempDirPath);
-//       console.log('++++++', tempDirPath);
-//       return tempDirPath;
-//     })
-//     .then((tempDirPath) => {
-//       console.log('------', tempDirPath);
-//       fs.readFile(path.join(tempDirPath, 'example-com.html'));
-//     })
-//     .then(fileData => expect(fileData.toString()).toBe(body));
-// });
