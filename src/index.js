@@ -1,4 +1,4 @@
 import loader from './loader';
-import getFileName from './getFileName';
+import getFilePath from './getFilePath';
 
-export default (url, outputDir) => loader(url, outputDir, getFileName(url));
+export default (url, outputDir = './') => loader(url, getFilePath(url, outputDir));
