@@ -9,8 +9,8 @@ import pageLoader from '../src/';
 axios.defaults.adapter = httpAdapter;
 
 const fixturesSrcPath = './__tests__/__fixtures__/src';
+const testPagePath = path.join(__dirname, '/__fixtures__/example.html');
 const host = 'http://example.com';
-const body = fs.readFileSync(path.join(__dirname, '/__fixtures__/example.html'));
 
 beforeEach(() => {
   nock(host)
@@ -26,19 +26,23 @@ beforeEach(() => {
 
 test('test simple get response status', () => {
   expect.assertions(1);
-  // return expect(axios.get(host)).resolves.toBe(200);
-  return axios.get(host)
-    .then((response) => {
-      expect(response.status).toBe(200);
-    });
+  return expect(axios.get(host)
+    .then(response => response.status)).resolves.toBe(200);
+  // return axios.get(host)
+  //   .then((response) => {
+  //     expect(response.status).toBe(200);
+  //   });
 });
 
 test('test simple get response body', () => {
+  const body = fs.readFileSync(testPagePath);
   expect.assertions(1);
-  return axios.get(host)
-    .then((response) => {
-      expect(response.data.toString()).toBe(body.toString());
-    });
+  return expect(axios.get(host)
+    .then(response => response.data.toString())).resolves.toBe(body.toString());
+  // return axios.get(host)
+  //   .then((response) => {
+  //     expect(response.data.toString()).toBe(body.toString());
+  //   });
 });
 
 test('sources download test', () => {

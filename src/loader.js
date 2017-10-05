@@ -1,17 +1,26 @@
 import axios from 'axios';
 import httpAdapter from 'axios/lib/adapters/http';
 import fs from 'mz/fs';
-import { getPagePath, getSrcDirPath } from './getPath';
-import getSrcLinks from './getSrcLinks';
-import loadFiles from './loadFiles';
-import changeSrcLinks from './changeSrcLinks';
+import url from 'url';
+import { getPagePath, getSrcDirPath, getSrcFilePath } from './getPath';
+import { getSrcLinks, changeSrcLinks } from './srcLinks';
+// import changeSrcLinks from './changeSrcLinks';
 
 
-export default (url, outputDir) => {
-  const pagePath = getPagePath(url, outputDir);
-  const srcDirPath = getSrcDirPath(url, outputDir);
+const loadFiles = (pageUrl, links, srcDirPath) => {
+  links.map((link) => { // eslint-disable-line array-callback-return
+    const srcUrl = url.resolve(pageUrl, link);
+    axios.get(srcUrl, { responseType: 'arraybuffer' })
+      .then(response => fs.writeFile(getSrcFilePath(srcDirPath, link), response.data))
+      .catch(error => error);
+  });
+};
+
+export default (urlPage, outputDir) => {
+  const pagePath = getPagePath(urlPage, outputDir);
+  const srcDirPath = getSrcDirPath(urlPage, outputDir);
   axios.defaults.adapter = httpAdapter;
-  return axios.get(url)
+  return axios.get(urlPage)
     .then(response => response.data)
     .then(data => fs.writeFile(pagePath, data, 'utf8'))
     .then(() => fs.mkdir(srcDirPath))
@@ -19,7 +28,7 @@ export default (url, outputDir) => {
     .then((pageFileData) => {
       const pageBody = pageFileData.toString();
       const links = getSrcLinks(pageBody);
-      loadFiles(url, links, srcDirPath);
+      loadFiles(urlPage, links, srcDirPath);
       return pageBody;
     })
     .then(page => fs.writeFile(pagePath, changeSrcLinks(page, srcDirPath), 'utf8'))
