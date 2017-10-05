@@ -18,8 +18,6 @@ export const getSrcFilePath = (srcDirPath, srcName) => {
   return pathNode.resolve(srcDirPath, srcFileName);
 };
 export const getSrcLocalPath = (srcDirPath, srcName) => {
-  console.log('srcNameeeeeee', srcName);
-  console.log('srcDirPath', srcDirPath);
   const { dir, base } = pathNode.parse(getSrcFilePath(srcDirPath, srcName));
   const { name } = pathNode.parse(dir);
   return `${name}/${base}`;
