@@ -1,12 +1,10 @@
 import fs from 'mz/fs';
 import path from 'path';
 import os from 'os';
-import axios from 'axios';
-import httpAdapter from 'axios/lib/adapters/http';
 import nock from 'nock';
+import axios from '../src/lib/axiosUpdate';
 import pageLoader from '../src/';
 
-axios.defaults.adapter = httpAdapter;
 
 const fixturesSrcPath = './__tests__/__fixtures__/src';
 const testPagePath = path.join(__dirname, '/__fixtures__/example.html');

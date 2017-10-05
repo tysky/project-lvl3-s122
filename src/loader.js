@@ -1,8 +1,7 @@
-import axios from 'axios';
 import debug from 'debug';
-import httpAdapter from 'axios/lib/adapters/http';
 import fs from 'mz/fs';
 import url from 'url';
+import axios from './lib/axiosUpdate';
 import { getPagePath, getSrcDirPath, getSrcFilePath } from './getPath';
 import { getSrcLinks, changeSrcLinks } from './srcLinks';
 
@@ -21,7 +20,6 @@ const loadFiles = (pageUrl, links, srcDirPath) => {
 export default (urlPage, outputDir) => {
   const pagePath = getPagePath(urlPage, outputDir);
   const srcDirPath = getSrcDirPath(urlPage, outputDir);
-  axios.defaults.adapter = httpAdapter;
   return axios.get(urlPage)
     .then((response) => {
       log(`request to ${urlPage}`);
