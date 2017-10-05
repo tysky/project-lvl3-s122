@@ -2,8 +2,8 @@ import fs from 'mz/fs';
 import path from 'path';
 import os from 'os';
 import nock from 'nock';
-import axios from '../src/lib/axiosUpdate';
 import pageLoader from '../src/';
+import axios from '../src/lib/axiosUpdate';
 
 
 const fixturesSrcPath = './__tests__/__fixtures__/src';
