@@ -4,7 +4,6 @@ import fs from 'mz/fs';
 import url from 'url';
 import { getPagePath, getSrcDirPath, getSrcFilePath } from './getPath';
 import { getSrcLinks, changeSrcLinks } from './srcLinks';
-// import changeSrcLinks from './changeSrcLinks';
 
 
 const loadFiles = (pageUrl, links, srcDirPath) => {

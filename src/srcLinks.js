@@ -3,12 +3,18 @@ import { getSrcLocalPath } from './getPath';
 
 const startWith = path => path[0] === '/';
 
+const attributes = {
+  script: 'src',
+  link: 'href',
+  img: 'src',
+};
+
 export const getSrcLinks = (pageBody) => {
   const $ = cheerio.load(pageBody);
-  const js = $('script').map((i, el) => $(el).attr('src')).get();
-  const css = $('link').map((i, el) => $(el).attr('href')).get();
-  const img = $('img').map((i, el) => $(el).attr('src')).get();
-  const links = [...js, ...css, ...img];
+  const links = Object.keys(attributes).reduce((acc, tag) => {
+    const tagAttrs = $(tag).map((i, el) => $(el).attr(attributes[tag])).get();
+    return [...acc, ...tagAttrs];
+  }, []);
   return links.filter(link => startWith(link));
 };
 
