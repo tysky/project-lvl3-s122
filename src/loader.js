@@ -1,7 +1,7 @@
 import debug from 'debug';
 import fs from 'mz/fs';
 import url from 'url';
-import axios from './lib/axiosUpdate';
+import axios from './lib/customAxios';
 import { getPagePath, getSrcDirPath, getSrcFilePath } from './getPath';
 import { getSrcLinks, changeSrcLinks } from './srcLinks';
 
@@ -42,5 +42,5 @@ export default (urlPage, outputDir) => {
       return Promise.all([loadFiles(urlPage, links, srcDirPath),
         fs.writeFile(pagePath, changeSrcLinks(pageBody, srcDirPath), 'utf8')]);
     })
-    .catch(error => error);
+    .catch(err => err);
 };

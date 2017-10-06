@@ -3,7 +3,7 @@ import path from 'path';
 import os from 'os';
 import nock from 'nock';
 import pageLoader from '../src/';
-import axios from '../src/lib/axiosUpdate';
+import axios from '../src/lib/customAxios';
 
 
 const fixturesSrcPath = './__tests__/__fixtures__/src';
