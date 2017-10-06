@@ -48,6 +48,7 @@ export default (urlPage, outputDir) => {
         return Promise.reject(msg);
       }
       const errMessages = {
+        ENOTFOUND: 'Error. This address was not found',
         ENOENT: "Error. The directory doesn't exists",
         EACCES: "Error. You don't have permissons to write files to this directory",
         EEXIST: 'Error. File with this name already exists',
