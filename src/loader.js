@@ -35,15 +35,12 @@ export default (urlPage, outputDir) => {
     })
     .then(() => fs.readFile(pagePath))
     .then((pageFileData) => {
-      log('start downloading files to the local directory');
+      log('start downloading files to the local directory and changing links in the page to local sources');
       const pageBody = pageFileData.toString();
       const links = getSrcLinks(pageBody);
       loadFiles(urlPage, links, srcDirPath);
-      return pageBody;
+      return Promise.all([loadFiles(urlPage, links, srcDirPath),
+        fs.writeFile(pagePath, changeSrcLinks(pageBody, srcDirPath), 'utf8')]);
     })
-    .then((page) => {
-      log('changing links in the page to local sources');
-      return fs.writeFile(pagePath, changeSrcLinks(page, srcDirPath), 'utf8');
-    })
-    .catch(error => console.log('Error!', error));
+    .catch(error => error);
 };
