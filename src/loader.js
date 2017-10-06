@@ -42,5 +42,17 @@ export default (urlPage, outputDir) => {
       return Promise.all([loadFiles(urlPage, links, srcDirPath),
         fs.writeFile(pagePath, changeSrcLinks(pageBody, srcDirPath), 'utf8')]);
     })
-    .catch(err => err);
+    .catch((error) => {
+      if (error.response) {
+        const msg = `Error. Request failed with status code ${error.response.status}`;
+        return Promise.reject(msg);
+      }
+      const errMessages = {
+        ENOENT: "Error. The directory doesn't exists",
+        EACCES: "Error. You don't have permissons to write files to this directory",
+        EEXIST: 'Error. File with this name already exists',
+        ENOTDIR: "Error. Given path isn't path to the directory",
+      };
+      return Promise.reject(errMessages[error.code]);
+    });
 };

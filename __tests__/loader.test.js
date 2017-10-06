@@ -64,18 +64,18 @@ describe('Test errors', () => {
     const tempDirPath = fs.mkdtempSync(`${os.tmpdir()}${path.sep}`);
     expect.assertions(1);
     return expect(pageLoader(`${host}/404page`, tempDirPath))
-      .rejects.toMatch('Error 404. Page not found');
+      .rejects.toMatch('Error. Request failed with status code 404');
   });
-  test('test downloading to nonexistent directory', () => {
+  test('ENOENT: test downloading to nonexistent directory', () => {
     nock(host).get('/').reply(200, 'hello world');
     expect.assertions(1);
     return expect(pageLoader(host, './nonexistent'))
       .rejects.toMatch("Error. The directory doesn't exists");
   });
-  test('passed filepath instead of path to the directory', () => {
+  test('ENOTDIR: passed filepath instead of path to the directory', () => {
     nock(host).get('/').reply(200, 'hello world');
     expect.assertions(1);
-    return expect(pageLoader(host, './__fixtures__/file.md'))
+    return expect(pageLoader(host, path.join(__dirname, '/__fixtures__/file.md')))
       .rejects.toMatch("Error. Given path isn't path to the directory");
   });
 });
