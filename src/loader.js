@@ -1,5 +1,7 @@
 import debug from 'debug';
+import Listr from 'listr';
 import fs from 'mz/fs';
+import path from 'path';
 import url from 'url';
 import axios from './lib/customAxios';
 import { getPagePath, getSrcDirPath, getSrcFilePath } from './getPath';
@@ -11,9 +13,16 @@ const loadFiles = (pageUrl, links, srcDirPath) => {
   links.map((link) => { // eslint-disable-line array-callback-return
     const srcUrl = url.resolve(pageUrl, link);
     log(`downloading file ${srcUrl}`);
-    axios.get(srcUrl, { responseType: 'arraybuffer' })
-      .then(response => fs.writeFile(getSrcFilePath(srcDirPath, link), response.data))
-      .catch(error => error);
+    const tasks = new Listr([
+      {
+        title: srcUrl,
+        task: () => {
+          axios.get(srcUrl, { responseType: 'arraybuffer' })
+            .then(response => fs.writeFile(getSrcFilePath(srcDirPath, link), response.data));
+        },
+      },
+    ]);
+    tasks.run();
   });
 };
 
@@ -42,6 +51,7 @@ export default (urlPage, outputDir) => {
       return Promise.all([loadFiles(urlPage, links, srcDirPath),
         fs.writeFile(pagePath, changeSrcLinks(pageBody, srcDirPath), 'utf8')]);
     })
+    .then(() => `\nPage was downloaded as ${path.parse(pagePath).base}`)
     .catch((error) => {
       if (error.response) {
         const msg = `Error. Request failed with status code ${error.response.status}`;

@@ -11,6 +11,7 @@ program
   .arguments('<url>')
   .action((url) => {
     pageLoader(url, program.output)
+      .then(message => console.log(message))
       .catch((err) => {
         console.error(err);
         process.exit(1);
