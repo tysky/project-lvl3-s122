@@ -23,20 +23,20 @@ describe('Test success requests', () => {
       .replyWithFile(200, path.join(__dirname, '/__fixtures__/src/cat.jpg'));
   });
 
-  test('test simple get response status', () => {
+  test('test simple get response status', async () => {
     expect.assertions(1);
-    return expect(axios.get(host)
-      .then(response => response.status)).resolves.toBe(200);
+    const response = await axios.get(host);
+    await expect(response.status).toBe(200);
   });
 
-  test('test simple get response body', () => {
+  test('test simple get response body', async () => {
     const body = fs.readFileSync(testPagePath);
     expect.assertions(1);
-    return expect(axios.get(host)
-      .then(response => response.data.toString())).resolves.toBe(body.toString());
+    const response = await axios.get(host);
+    await expect(response.data.toString()).toBe(body.toString());
   });
 
-  test('sources download test', () => {
+  test('sources download test', async () => {
     const tempDirPath = fs.mkdtempSync(`${os.tmpdir()}${path.sep}`);
 
     const cssPath = path.join(fixturesSrcPath, 'app.css');
@@ -48,34 +48,35 @@ describe('Test success requests', () => {
 
     const testFilesPath = 'example-com_files';
     expect.assertions(3);
-    return pageLoader(host, tempDirPath)
-      .then(() => fs.readFile(path.join(tempDirPath, testFilesPath, 'src-app.css')))
-      .then(cssFile => expect(cssFile.toString()).toBe(expectedCSS.toString()))
-      .then(() => fs.readFile(path.join(tempDirPath, testFilesPath, 'src-app.js')))
-      .then(jsFile => expect(jsFile.toString()).toBe(expectedJS.toString()))
-      .then(() => fs.readFile(path.join(tempDirPath, testFilesPath, 'src-cat.jpg')))
-      .then(imgFile => expect(imgFile.toString()).toBe(expectedIMG.toString()));
+
+    await pageLoader(host, tempDirPath);
+    const cssFile = await fs.readFile(path.join(tempDirPath, testFilesPath, 'src-app.css'));
+    const jsFile = await fs.readFile(path.join(tempDirPath, testFilesPath, 'src-app.js'));
+    const imgFile = await fs.readFile(path.join(tempDirPath, testFilesPath, 'src-cat.jpg'));
+    await expect(cssFile.toString()).toBe(expectedCSS.toString());
+    await expect(jsFile.toString()).toBe(expectedJS.toString());
+    await expect(imgFile.toString()).toBe(expectedIMG.toString());
   });
 });
 
 describe('Test errors', () => {
-  test('404 page test', () => {
+  test('404 page test', async () => {
     nock(host).get('/404page').reply(404);
     const tempDirPath = fs.mkdtempSync(`${os.tmpdir()}${path.sep}`);
     expect.assertions(1);
-    return expect(pageLoader(`${host}/404page`, tempDirPath))
+    await expect(pageLoader(`${host}/404page`, tempDirPath))
       .rejects.toMatch('Error. Request failed with status code 404');
   });
-  test('ENOENT: test downloading to nonexistent directory', () => {
+  test('ENOENT: test downloading to nonexistent directory', async () => {
     nock(host).get('/').reply(200, 'hello world');
     expect.assertions(1);
-    return expect(pageLoader(host, './nonexistent'))
+    await expect(pageLoader(host, './nonexistent'))
       .rejects.toMatch("Error. The directory doesn't exists");
   });
-  test('ENOTDIR: passed filepath instead of path to the directory', () => {
+  test('ENOTDIR: passed filepath instead of path to the directory', async () => {
     nock(host).get('/').reply(200, 'hello world');
     expect.assertions(1);
-    return expect(pageLoader(host, path.join(__dirname, '/__fixtures__/file.md')))
+    await expect(pageLoader(host, path.join(__dirname, '/__fixtures__/file.md')))
       .rejects.toMatch("Error. Given path isn't path to the directory");
   });
 });
