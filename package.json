@@ -1,6 +1,6 @@
 {
   "name": "web-page-loader",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Utility for downloading web pages",
   "main": "index.js",
   "bin": {
